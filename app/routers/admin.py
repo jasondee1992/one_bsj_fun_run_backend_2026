@@ -113,12 +113,21 @@ def _payment_dict(payment: Payment) -> dict:
     return {
         "id": payment.id,
         "provider_name": payment.provider_name,
+        "payment_method": payment.payment_method,
         "payment_reference": payment.payment_reference,
         "provider_transaction_id": payment.provider_transaction_id,
         "amount": payment.amount,
         "currency": payment.currency,
         "status": payment.status,
+        "qr_code_url": payment.qr_code_url,
+        "qr_code_payload": payment.qr_code_payload,
+        "payment_url": payment.payment_url,
         "raw_payload": payment.raw_payload,
+        "provider_response_raw": payment.provider_response_raw,
+        "paid_at": payment.paid_at,
+        "expires_at": payment.expires_at,
+        "webhook_last_event": payment.webhook_last_event,
+        "webhook_last_event_at": payment.webhook_last_event_at,
         "created_at": payment.created_at,
         "updated_at": payment.updated_at,
     }
@@ -241,4 +250,3 @@ def admin_export_csv(db: Session = Depends(get_db)) -> StreamingResponse:
     output.seek(0)
     headers = {"Content-Disposition": 'attachment; filename="onebsj-registrations.csv"'}
     return StreamingResponse(iter([output.getvalue()]), media_type="text/csv", headers=headers)
-

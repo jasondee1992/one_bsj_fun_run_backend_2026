@@ -72,12 +72,21 @@ class Payment(Base, TimestampMixin):
         nullable=False,
     )
     provider_name: Mapped[str] = mapped_column(String(80), nullable=False, default="mock")
+    payment_method: Mapped[str | None] = mapped_column(String(80))
     payment_reference: Mapped[str] = mapped_column(String(80), index=True, nullable=False)
     provider_transaction_id: Mapped[str | None] = mapped_column(String(120), index=True)
     amount: Mapped[float] = mapped_column(Float, nullable=False, default=0)
     currency: Mapped[str] = mapped_column(String(10), nullable=False, default="PHP")
     status: Mapped[str] = mapped_column(String(40), index=True, nullable=False, default="PENDING_PAYMENT")
+    qr_code_url: Mapped[str | None] = mapped_column(String(1000))
+    qr_code_payload: Mapped[str | None] = mapped_column(Text)
+    payment_url: Mapped[str | None] = mapped_column(String(1000))
     raw_payload: Mapped[str | None] = mapped_column(Text)
+    provider_response_raw: Mapped[str | None] = mapped_column(Text)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    webhook_last_event: Mapped[str | None] = mapped_column(String(160))
+    webhook_last_event_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     registration: Mapped[Registration] = relationship(back_populates="payments")
 
@@ -150,4 +159,3 @@ class EventConfig(Base, TimestampMixin):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     key: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     value: Mapped[str] = mapped_column(Text, nullable=False)
-

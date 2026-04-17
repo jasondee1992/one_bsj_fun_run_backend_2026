@@ -39,6 +39,13 @@ Important values:
 - `ADMIN_PASSWORD=admin123`
 - `ADMIN_TOKEN_SECRET=change-this-local-secret`
 - `BIB_PREFIX=OneBSJ`
+- `APP_BASE_URL=http://127.0.0.1:8000`
+- `PAYMENT_PROVIDER=mock`
+- `PAYMENT_MODE=sandbox`
+- `PAYMENT_PUBLIC_KEY=`
+- `PAYMENT_SECRET_KEY=`
+- `PAYMENT_WEBHOOK_SECRET=`
+- `PAYMENT_SESSION_TTL_MINUTES=60`
 
 For local testing, change `ADMIN_TOKEN_SECRET` in `.env`.
 
@@ -66,6 +73,9 @@ Public:
 
 Payments:
 
+- `POST /api/payments/{registration_id}/create`
+- `GET /api/payments/{registration_id}`
+- `POST /api/payments/{registration_id}/simulate-paid`
 - `POST /api/payments/mock-success`
 - `POST /api/payments/webhook`
 
@@ -125,6 +135,20 @@ Allowed shirt sizes:
 New registrations start as `PENDING_PAYMENT`.
 
 For local testing:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/payments/REG-.../create
+```
+
+This returns a sandbox QR payload that the frontend renders as a QR code.
+
+To simulate a successful local payment:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/payments/REG-.../simulate-paid
+```
+
+The older mock success endpoint is still available:
 
 ```bash
 curl -X POST http://127.0.0.1:8000/api/payments/mock-success \
@@ -204,10 +228,12 @@ The smoke test creates a registration, marks it paid twice to verify idempotency
 
 ## Frontend Coordination Notes
 
-The nearby frontend folder `/home/udot/PROJECTS/one_bsj_fun_run_fontend_2026` currently has no app source to inspect. This backend is prepared for a frontend that uses:
+The nearby frontend folder `/home/udot/PROJECTS/one_bsj_fun_run_fontend_2026` uses:
 
 - `POST /api/registrations` for the registration form
-- `GET /api/registrations/{registration_id}/status` for polling
+- `POST /api/payments/{registration_id}/create` to create/load the payment QR session
+- `GET /api/payments/{registration_id}` for payment refresh polling
+- `POST /api/payments/{registration_id}/simulate-paid` for development testing
+- `GET /api/registrations/{registration_id}` for final confirmation state
 - `POST /api/admin/login` for local admin login
 - bearer token auth for admin pages
-

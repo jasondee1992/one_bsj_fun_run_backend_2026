@@ -6,9 +6,13 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, mo
 
 
 class PaymentStatus(StrEnum):
+    pending = "PENDING"
     pending_payment = "PENDING_PAYMENT"
+    awaiting_payment = "AWAITING_PAYMENT"
     paid = "PAID"
+    failed = "FAILED"
     payment_failed = "PAYMENT_FAILED"
+    expired = "EXPIRED"
     cancelled = "CANCELLED"
 
 
@@ -144,4 +148,3 @@ class RegistrationStatusRead(BaseModel):
     sms_sent: bool
     sms_sent_at: datetime | None
     paid_at: datetime | None
-

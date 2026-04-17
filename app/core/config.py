@@ -24,6 +24,14 @@ class Settings(BaseSettings):
     event_name: str = "OneBSJ Fun Run 2026"
     default_currency: str = "PHP"
     default_registration_amount: float = 0
+    app_base_url: str = "http://127.0.0.1:8000"
+
+    payment_provider: str = "mock"
+    payment_mode: str = "sandbox"
+    payment_public_key: str | None = None
+    payment_secret_key: str | None = None
+    payment_webhook_secret: str | None = None
+    payment_session_ttl_minutes: int = 60
 
     @field_validator("frontend_origins", mode="before")
     @classmethod
@@ -51,4 +59,3 @@ def get_settings() -> Settings:
 
 
 settings = get_settings()
-
